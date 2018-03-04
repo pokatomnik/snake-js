@@ -49,6 +49,12 @@ class Border {
       process.stdout.write(this._borderSymbol);
     }
   }
+
+  putString(string, pos = 5) {
+    this._drawTop();
+    process.stdout.cursorTo(pos, 0);
+    process.stdout.write(string);
+  }
 }
 
 module.exports = Border;

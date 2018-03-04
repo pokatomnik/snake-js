@@ -3,46 +3,14 @@ const Border = require('./Border');
 const Snake = require('../Snake');
 
 class Screen {
-  constructor(params) {
-    this.restart(params);
+  constructor() {
+    this.restart();
+    this.enableControl();
   }
 
-  restart({ tickPeriod }) {
-    this.clear();
-    this._tickPeriod = tickPeriod;
-    this._border = new Border('█', this);
-    this._tickTimerId = undefined;
-    this.sizes = {
-      width: process.stdout.columns,
-      height: process.stdout.rows
-    };
-
-    this._snake = new Snake({
-      baseLength: 5,
-      x: 20,
-      y: 20,
-      symbol: '*',
-      screen: this
-    });
-
-    this._baseCreate();
-  }
-
-  clear() {
-    for (let i = 0; i < process.stdout.rows - 1; i++) {
-      process.stdout.cursorTo(0, i);
-      process.stdout.clearLine();
-    }
-  }
-
-  start() {
-    this._baseRepaint();
-    this.clear();
-    this._tickTimerId = setInterval(() => {
-      this._baseRepaint();
-    }, this._tickPeriod);
-
+  enableControl() {
     process.stdin.on('keypress', (ch, key) => {
+      if (!key) { return; }
       switch (key.name) {
         case 'right':
           this._snake.move(1, 0);
@@ -60,9 +28,7 @@ class Screen {
           process.exit(0);
           break;
         case 'r':
-          this.restart({
-            tickPeriod: this._tickPeriod
-          });
+          this.restart();
           break;
         default:
           break;
@@ -70,37 +36,46 @@ class Screen {
     });
   }
 
-  stop() {
-    clearInterval(this._tickTimerId);
-    this._tickTimerId = undefined;
-    process.stdin.off('keypress');
-  }
+  restart() {
+    this.clear();
+    this._border = new Border('█', this);
+    this.sizes = {
+      width: process.stdout.columns,
+      height: process.stdout.rows
+    };
 
-  isStarted() {
-    return !!this._tickTimerId;
-  }
+    this._snake = new Snake({
+      baseLength: 5,
+      x: 20,
+      y: 20,
+      symbol: '*',
+      screen: this
+    });
 
-
-  _baseCreate() {
     this._snake.draw();
-    this._baseRepaint();
+    this.repaint();
   }
 
-  _baseRepaint() {
+  clear() {
+    for (let i = 0; i < process.stdout.rows - 1; i++) {
+      process.stdout.cursorTo(0, i);
+      process.stdout.clearLine();
+    }
+  }
+
+  getBorder() {
+    return this._border;
+  }
+
+  repaint() {
     const currentWidth = process.stdout.columns;
     const currentHeight = process.stdout.rows;
 
     this._border.draw();
 
     if (this.sizes.width !== currentWidth || this.sizes.height !== currentHeight) {
-      this.restart({
-        tickPeriod: this._tickPeriod
-      });
+      this.restart();
     }
-  }
-
-  getTickPeriod() {
-    return this._tickPeriod;
   }
 }
 

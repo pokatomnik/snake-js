@@ -7,7 +7,4 @@ readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 process.stdin.resume();
 
-new Screen({
-  tickPeriod: 1000
-})
-  .start();
+new Screen();

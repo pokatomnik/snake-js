@@ -71,9 +71,7 @@ class Snake {
 
   checkGameOver(first) {
     if (first.getX() === 0 || first.getY() === 0) {
-      this._screen.restart({
-        tickPeriod: this._screen.getTickPeriod()
-      });
+      this._screen.restart();
     }
   }
 
@@ -88,6 +86,7 @@ class Snake {
   }
 
   _updatePositions(xmod, ymod) {
+    this._screen.getBorder().putString(`x = ${xmod}; y = ${ymod}`);
     const lastIndex = this.getLength() - 1;
     const last = this.parts[lastIndex];
     const newPart = new Part(
