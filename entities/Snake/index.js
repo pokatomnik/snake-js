@@ -69,10 +69,22 @@ class Snake {
     return first.getX() !== second.getX() && first.getY() !== second.getY();
   }
 
-  checkGameOver(first) {
+  _checkGameOver(first) {
+    return this._checkBorderCollision(first) || this._checkSelfCollision(first);
+  }
+
+  _checkBorderCollision(first) {
     const x = first.getX();
     const y = first.getY();
     return this._screen.getBorder().collide(x, y);
+  }
+
+  _checkSelfCollision(first) {
+    const x = first.getX();
+    const y = first.getY();
+    return this.parts.some(
+      (part, index) => index && (part.getX() === x && part.getY() === y)
+    );
   }
 
   move(xmod, ymod) {
@@ -89,7 +101,6 @@ class Snake {
   }
 
   _updatePositions(xmod, ymod) {
-    this._screen.getBorder().putString(`x = ${xmod}; y = ${ymod}`);
     const lastIndex = this.getLength() - 1;
     const last = this.parts[lastIndex];
     const newPart = new Part(
@@ -111,7 +122,7 @@ class Snake {
     newFirst.setX(second.getX() + xmod);
     newFirst.setY(second.getY() + ymod);
 
-    return this.checkGameOver(newPart);
+    return this._checkGameOver(newPart);
   }
 
   draw() {
