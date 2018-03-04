@@ -53,7 +53,15 @@ class Border {
   putString(string, pos = 5) {
     this._drawTop();
     process.stdout.cursorTo(pos, 0);
-    process.stdout.write(string);
+    process.stdout.write(`|${string}|`);
+  }
+
+  collide(x, y) {
+    return x === 0 ||
+           y === 0 ||
+           x === process.stdout.columns - this._indent - 1 ||
+           y === process.stdout.rows - 1;
+
   }
 }
 

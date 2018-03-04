@@ -53,7 +53,7 @@ class Screen {
     });
 
     this._snake.draw();
-    this.repaint();
+    this._border.draw();
   }
 
   clear() {
@@ -67,15 +67,11 @@ class Screen {
     return this._border;
   }
 
-  repaint() {
+  sizesChanged() {
     const currentWidth = process.stdout.columns;
     const currentHeight = process.stdout.rows;
 
-    this._border.draw();
-
-    if (this.sizes.width !== currentWidth || this.sizes.height !== currentHeight) {
-      this.restart();
-    }
+    return this.sizes.width !== currentWidth || this.sizes.height !== currentHeight;
   }
 }
 
