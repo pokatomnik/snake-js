@@ -63,6 +63,10 @@ class Border {
            y === process.stdout.rows - 1;
 
   }
+
+  getIndent() {
+    return this._indent;
+  }
 }
 
 module.exports = Border;

@@ -1,6 +1,7 @@
-const _ = require('lodash');
 const Border = require('./Border');
 const Snake = require('../Snake');
+const Rabbit = require('../Rabbit');
+const rnd = require('../../utils').randomInteger;
 
 class Screen {
   constructor() {
@@ -52,8 +53,20 @@ class Screen {
       screen: this
     });
 
+    this.placeRabbit();
+
     this._snake.draw();
     this._border.draw();
+  }
+
+  placeRabbit() {
+    this._rabbit = new Rabbit({
+      x: rnd(1, process.stdout.columns - this.getBorder().getIndent() - 1),
+      y: rnd(1, process.stdout.rows - 1),
+      symbol: '@',
+      screen: this
+    });
+    this._rabbit.draw();
   }
 
   clear() {
@@ -65,6 +78,10 @@ class Screen {
 
   getBorder() {
     return this._border;
+  }
+
+  getRabbit() {
+    return this._rabbit;
   }
 
   sizesChanged() {

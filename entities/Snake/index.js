@@ -122,6 +122,11 @@ class Snake {
     newFirst.setX(second.getX() + xmod);
     newFirst.setY(second.getY() + ymod);
 
+    if (this._screen.getRabbit().collide(newPart.getX(), newPart.getY())) {
+      this._screen.placeRabbit();
+      this.grow();
+    }
+
     return this._checkGameOver(newPart);
   }
 
