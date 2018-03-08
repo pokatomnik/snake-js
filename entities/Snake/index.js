@@ -1,4 +1,6 @@
 const chalk = require('chalk');
+const SPEEDUP_VALUE = 100;
+const MINIMUM_INTERVAL = 50;
 
 class Part {
   constructor(x, y) {
@@ -21,7 +23,7 @@ class Part {
 
 class Snake {
   constructor({ baseLength, x, y, symbol, screen }) {
-    this._symbol = chalk.blue(symbol);
+    this._symbol = chalk.yellow(symbol);
     this._screen = screen;
     this.parts = [];
     for (let i = x; i > x - baseLength; i--) {
@@ -33,7 +35,7 @@ class Snake {
     return this.parts.length;
   }
 
-  grow() {
+  _grow() {
     const currentLength = this.getLength();
     const penult = this.parts[currentLength - 1];
     const last = this.parts[currentLength - 2];
@@ -72,13 +74,18 @@ class Snake {
   }
 
   _checkGameOver(first) {
-    return this._checkBorderCollision(first) || this._checkSelfCollision(first);
+    const borderCollision = this._checkBorderCollision(first);
+    const selfCollision = this._checkSelfCollision(first);
+
+    return borderCollision || selfCollision;
   }
 
   _checkBorderCollision(first) {
     const x = first.getX();
     const y = first.getY();
-    return this._screen.getBorder().collide(x, y);
+    const collide = this._screen.getBorder().collide(x, y);
+
+    return collide;
   }
 
   _checkSelfCollision(first) {
@@ -87,6 +94,16 @@ class Snake {
     return this.parts.some(
       (part, index) => index && (part.getX() === x && part.getY() === y)
     );
+  }
+
+  _speedup() {
+    const movingInterval = this._screen.getMovingInterval();
+    const selectedMove = this._screen.getSelectedMove();
+    const newSpeedValue = (movingInterval - SPEEDUP_VALUE) <= MINIMUM_INTERVAL
+      ? MINIMUM_INTERVAL
+      : movingInterval - SPEEDUP_VALUE;
+
+    this._screen.reinitializeMovingTimer(newSpeedValue, selectedMove);
   }
 
   move(xmod, ymod) {
@@ -124,9 +141,11 @@ class Snake {
     newFirst.setX(second.getX() + xmod);
     newFirst.setY(second.getY() + ymod);
 
+    // eating a rabbit
     if (this._screen.getRabbit().collide(newPart.getX(), newPart.getY())) {
       this._screen.placeRabbit();
-      this.grow();
+      this._grow();
+      this._speedup();
     }
 
     return this._checkGameOver(newPart);
@@ -141,7 +160,11 @@ class Snake {
   }
 
   _output(symbol) {
-    for (let part of this.parts) {
+    let index = this.parts.length;
+
+    while (this.parts[--index]) {
+      const part = this.parts[index];
+
       process.stdout.cursorTo(part.getX(), part.getY());
       process.stdout.write(symbol);
     }

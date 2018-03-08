@@ -13,10 +13,10 @@ class Screen {
   }
 
   enableControl() {
-    this.controls = createControls(this);
+    this._controls = createControls(this);
     process.stdin.on('keypress', (ch, key) => {
       if (!key) { return; }
-      this.controls.emit(key.name);
+      this._selectedMove = key.name;
     });
   }
 
@@ -32,7 +32,7 @@ class Screen {
       baseLength: 5,
       x: 20,
       y: 20,
-      symbol: '*',
+      symbol: '•',
       screen: this
     });
 
@@ -40,6 +40,17 @@ class Screen {
 
     this._snake.draw();
     this._border.draw();
+
+    this.reinitializeMovingTimer();
+  }
+
+  reinitializeMovingTimer(interval = 300, selectedMove = 'right') {
+    this._movingInterval = interval;
+    clearInterval(this._movingTimer);
+    this._selectedMove = selectedMove;
+    this._movingTimer = setInterval(() => {
+      this._controls.emit(this._selectedMove);
+    }, this._movingInterval);
   }
 
   placeRabbit() {
@@ -88,6 +99,14 @@ class Screen {
 
   getSnake() {
     return this._snake;
+  }
+
+  getMovingInterval() {
+    return this._movingInterval;
+  }
+
+  getSelectedMove() {
+    return this._selectedMove;
   }
 
   sizesChanged() {

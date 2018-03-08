@@ -3,7 +3,7 @@ const chalk = require('chalk');
 class Border {
   constructor(borderSymbol, screen, indent = 1) {
     this._screen = screen;
-    this._borderSymbol = chalk.red(borderSymbol);
+    this._borderSymbol = borderSymbol;
     this._indent = indent;
   }
 
