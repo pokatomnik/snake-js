@@ -2,6 +2,7 @@ const Border = require('./Border');
 const Snake = require('../Snake');
 const Rabbit = require('../Rabbit');
 const rnd = require('../../utils').randomInteger;
+const createControls = require('../controls');
 
 const RABBIT_PLACING_BOUNDS = 5;
 
@@ -12,30 +13,10 @@ class Screen {
   }
 
   enableControl() {
+    this.controls = createControls(this);
     process.stdin.on('keypress', (ch, key) => {
       if (!key) { return; }
-      switch (key.name) {
-        case 'right':
-          this._snake.move(1, 0);
-          break;
-        case 'up':
-          this._snake.move(0, -1);
-          break;
-        case 'left':
-          this._snake.move(-1, 0);
-          break;
-        case 'down':
-          this._snake.move(0, 1);
-          break;
-        case 'q':
-          process.exit(0);
-          break;
-        case 'r':
-          this.restart();
-          break;
-        default:
-          break;
-      }
+      this.controls.emit(key.name);
     });
   }
 
@@ -103,6 +84,10 @@ class Screen {
 
   getRabbit() {
     return this._rabbit;
+  }
+
+  getSnake() {
+    return this._snake;
   }
 
   sizesChanged() {
