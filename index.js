@@ -17,4 +17,5 @@ process.on('exit', () => {
   process.stderr.write('\x1B[?25h');
 });
 
+// start the game
 new Screen();

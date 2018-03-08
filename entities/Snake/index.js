@@ -1,3 +1,5 @@
+const chalk = require('chalk');
+
 class Part {
   constructor(x, y) {
     this._x = x;
@@ -19,7 +21,7 @@ class Part {
 
 class Snake {
   constructor({ baseLength, x, y, symbol, screen }) {
-    this._symbol = symbol;
+    this._symbol = chalk.blue(symbol);
     this._screen = screen;
     this.parts = [];
     for (let i = x; i > x - baseLength; i--) {
@@ -143,6 +145,10 @@ class Snake {
       process.stdout.cursorTo(part.getX(), part.getY());
       process.stdout.write(symbol);
     }
+  }
+
+  getParts() {
+    return this.parts;
   }
 }
 

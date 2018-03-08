@@ -1,8 +1,10 @@
+const chalk = require('chalk');
+
 class Rabbit {
   constructor({x, y, symbol = '@', screen}) {
     this._x = x;
     this._y = y;
-    this._symbol = symbol;
+    this._symbol = chalk.green(symbol);
     this._screen = screen;
   }
 

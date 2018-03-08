@@ -3,6 +3,8 @@ const Snake = require('../Snake');
 const Rabbit = require('../Rabbit');
 const rnd = require('../../utils').randomInteger;
 
+const RABBIT_PLACING_BOUNDS = 5;
+
 class Screen {
   constructor() {
     this.restart();
@@ -60,9 +62,28 @@ class Screen {
   }
 
   placeRabbit() {
+    let inSnake, x, y;
+
+    do {
+      x = rnd(
+        1 + RABBIT_PLACING_BOUNDS,
+        process.stdout.columns - this.getBorder().getIndent() - RABBIT_PLACING_BOUNDS
+      );
+      y = rnd(
+        1 + RABBIT_PLACING_BOUNDS,
+        process.stdout.rows - 1 - RABBIT_PLACING_BOUNDS
+      );
+      
+      inSnake = this._snake
+        .getParts()
+        .some(
+          part => part.getX() === x && part.getY() === y
+        );
+    } while (inSnake);
+
     this._rabbit = new Rabbit({
-      x: rnd(1, process.stdout.columns - this.getBorder().getIndent() - 1),
-      y: rnd(1, process.stdout.rows - 1),
+      x,
+      y,
       symbol: '@',
       screen: this
     });
