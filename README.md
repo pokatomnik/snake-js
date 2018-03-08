@@ -6,5 +6,6 @@ Controls:
 
 * r: restart
 * q: exit
+* arrows: direction
 
 ![Screenshot](screenshot.png)
