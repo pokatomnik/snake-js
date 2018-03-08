@@ -3,13 +3,16 @@
 const Screen = require('./entities/Screen');
 const readline = require('readline');
 
-/* Some terminal magic */
+// enable keypress events
 readline.emitKeypressEvents(process.stdin);
+
+// enable raw input: no return required
 process.stdin.setRawMode(true);
-process.stdin.resume();
+
 // hide caret
 process.stderr.write('\x1B[?25l');
 
+// show caret after close
 process.on('exit', () => {
   process.stderr.write('\x1B[?25h');
 });
