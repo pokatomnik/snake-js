@@ -4,6 +4,20 @@ class Controls extends EventEmitter {
   constructor(game) {
     super();
     this._game = game;
+    this._oppositeMap = {
+      left: 'right',
+      right: 'left',
+      up: 'down',
+      down: 'up'
+    };
+  }
+
+  getOppositeMap() {
+    return this._oppositeMap;
+  }
+
+  getAvailableEvents() {
+    return Object.keys(this._events);
   }
 }
 

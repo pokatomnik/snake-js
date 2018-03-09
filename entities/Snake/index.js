@@ -115,10 +115,6 @@ class Snake {
     }
   }
 
-  _isMovingAvailable(first, third) {
-    return first.getX() !== third.getX() || first.getY() !== third.getY();
-  }
-
   _updatePositions(xmod, ymod) {
     const lastIndex = this.getLength() - 1;
     const last = this.parts[lastIndex];
@@ -126,12 +122,6 @@ class Snake {
       this.parts[0].getX() + xmod,
       this.parts[0].getY() + ymod
     );
-    if (
-      !this._isMovingAvailable(
-        newPart,
-        this.parts[1]
-      )
-    ) { return; }
 
     this.parts.splice(lastIndex, 1);
     this.parts.unshift(last);
@@ -160,7 +150,7 @@ class Snake {
   }
 
   _output(symbol) {
-    let index = this.parts.length;
+    let index = this.getLength();
 
     while (this.parts[--index]) {
       const part = this.parts[index];

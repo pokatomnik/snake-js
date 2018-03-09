@@ -15,7 +15,20 @@ class Screen {
   enableControl() {
     this._controls = createControls(this);
     process.stdin.on('keypress', (ch, key) => {
-      if (!key) { return; }
+      // if invalid key
+      if (!key || !this._controls.getAvailableEvents().includes(key.name)) { return; }
+
+      // forbid to move backward
+      if (this._controls.getOppositeMap()[key.name] === this.getSelectedMove()) { return; }
+
+      // snake haven't move moving is not allowed
+      if (!this._directionChangeAllowed) { return; }
+
+      // moving directions are the same
+      if (key.name === this._selectedMove) { return; }
+
+      this._directionChangeAllowed = false;
+
       this._selectedMove = key.name;
     });
   }
@@ -23,7 +36,7 @@ class Screen {
   restart() {
     this.clear();
     this._border = new Border('█', this);
-    this.sizes = {
+    this._sizes = {
       width: process.stdout.columns,
       height: process.stdout.rows
     };
@@ -41,6 +54,8 @@ class Screen {
     this._snake.draw();
     this._border.draw();
 
+    this._directionChangeAllowed = true;
+
     this.reinitializeMovingTimer();
   }
 
@@ -50,6 +65,7 @@ class Screen {
     this._selectedMove = selectedMove;
     this._movingTimer = setInterval(() => {
       this._controls.emit(this._selectedMove);
+      this._directionChangeAllowed = true;
     }, this._movingInterval);
   }
 
@@ -113,7 +129,7 @@ class Screen {
     const currentWidth = process.stdout.columns;
     const currentHeight = process.stdout.rows;
 
-    return this.sizes.width !== currentWidth || this.sizes.height !== currentHeight;
+    return this._sizes.width !== currentWidth || this._sizes.height !== currentHeight;
   }
 }
 
