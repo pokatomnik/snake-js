@@ -30,7 +30,7 @@ module.exports = (game) => {
 
   controls.on('up', function () {
     this._game.getSnake().move(0, -1);
-  })
+  });
 
   controls.on('left', function () {
     this._game.getSnake().move(-1, 0);

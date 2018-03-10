@@ -1,5 +1,3 @@
-const chalk = require('chalk');
-
 class Border {
   constructor(borderSymbol, screen, indent = 1) {
     this._screen = screen;
