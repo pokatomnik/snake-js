@@ -35,7 +35,7 @@ class Screen {
 
   restart() {
     this.clear();
-    this._border = new Border('█', this);
+    this._border = new Border('⚅', this);
     this._sizes = {
       width: process.stdout.columns,
       height: process.stdout.rows
@@ -45,7 +45,7 @@ class Screen {
       baseLength: 5,
       x: 20,
       y: 20,
-      symbol: '•',
+      symbol: '◉',
       screen: this
     });
 
@@ -92,7 +92,7 @@ class Screen {
     this._rabbit = new Rabbit({
       x,
       y,
-      symbol: '@',
+      symbol: '🐰',
       screen: this
     });
     this._rabbit.draw();
