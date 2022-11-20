@@ -6,7 +6,7 @@
   "dependencies": {
     "@types/node": "^9.4.6",
     "chalk": "^2.3.2",
-    "eslint": "^4.18.2",
+    "eslint": "^8.28.0",
     "lodash": "^4.17.5",
     "nodemon": "^1.17.1"
   },
